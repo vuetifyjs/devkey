@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { mdiHome, mdiLogin, mdiViewDashboard } from '@mdi/js'
+  import { mdiGithub, mdiHome, mdiLogin, mdiViewDashboard } from '@mdi/js'
 
   defineOptions({ name: 'App' })
 </script>
@@ -24,6 +24,17 @@
       </svg>
       Dashboard
     </router-link>
+    <a
+      class="dk-nav__link dk-nav__link--github"
+      href="https://github.com/vuetifyjs/devkey"
+      target="_blank"
+      rel="noopener"
+    >
+      <svg class="dk-icon" viewBox="0 0 24 24" width="16" height="16">
+        <path :d="mdiGithub" fill="currentColor" />
+      </svg>
+      GitHub
+    </a>
   </nav>
 
   <router-view />
@@ -36,10 +47,19 @@
     box-sizing: border-box;
   }
 
+  html, body, #app {
+    height: 100%;
+  }
+
   body {
     font-family: 'Inter', sans-serif;
     background: var(--v0-theme-background);
     color: var(--v0-theme-text);
+  }
+
+  #app {
+    display: flex;
+    flex-direction: column;
   }
 
   .dk-nav {
@@ -77,5 +97,9 @@
 
   .dk-nav__link.router-link-active {
     color: var(--v0-theme-primary);
+  }
+
+  .dk-nav__link--github {
+    margin-left: auto;
   }
 </style>

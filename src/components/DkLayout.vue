@@ -23,7 +23,8 @@
 <style scoped>
   .dk-layout {
     display: flex;
-    min-height: 100vh;
+    flex: 1;
+    min-height: 0;
     background: var(--v0-theme-background);
   }
 

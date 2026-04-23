@@ -115,7 +115,7 @@
   .dk-landing {
     background: var(--v0-theme-background);
     color: var(--v0-theme-text);
-    min-height: 100vh;
+    flex: 1;
   }
 
   .dk-landing__hero {

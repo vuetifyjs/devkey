@@ -71,15 +71,16 @@
 <style scoped>
   .dk-login {
     display: flex;
+    flex: 1;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
     background: var(--v0-theme-background);
   }
 
   .dk-login__card {
     max-width: 420px;
     width: 100%;
+    height: auto;
     padding: 2rem;
   }
 
