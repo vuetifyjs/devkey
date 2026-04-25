@@ -1,0 +1,114 @@
+# DevKey Logo Design
+
+**Date:** 2026-04-25
+**Status:** Approved (concept) — ready for asset implementation
+
+## Purpose
+
+Give the DevKey demo project a primary visual identity: a logo system with a mark, wordmark, and lockups that can be dropped into the app shell, README, social cards, and tutorial screenshots.
+
+DevKey is the demo UI library at `~/sites/devkey/` built to validate the v0 alpha blog post tutorial. The logo needs its own identity (not visually tied to Vuetify or v0) so DevKey reads as an independent product the tutorial happens to use.
+
+## Concept
+
+**Modern flat key**, distinct from Vuetify. The mark is a literal, simplified key — bow on the left, shaft and teeth extending right.
+
+The bow is a **rounded square** with a small center dot — half keycap, half keyhole. The dot doubles as a status indicator at small sizes and gives the mark a focal point. The teeth are two soft, rounded rectangles, suggesting a real flat-key cut without going realistic.
+
+The wordmark is **Geist 800** with -4% letter-spacing — slightly compressed, geometric, current. The wordmark sits to the right of the mark with consistent spacing equal to half the icon width.
+
+## Color
+
+| Token | Hex | Use |
+|-------|-----|-----|
+| `brass-dark` | `#F6B04E` | Logo on dark backgrounds |
+| `brass-light` | `#D18B1F` | Logo on light backgrounds |
+| `ink` | `#0F1115` | Wordmark on light, tile background on dark |
+| `paper` | `#F5F5F5` | Wordmark on dark |
+
+Brass references the physical material of keys — warm, premium, immediately distinct from the cool-blue dev-tool landscape.
+
+## Mark geometry
+
+64×64 viewBox. All measurements are SVG units.
+
+**Bow** (rounded square outline)
+- Position: `x=6 y=18`
+- Size: `28×28`
+- Corner radius: `8`
+- Stroke: `5`, no fill
+
+**Center dot**
+- Position: `cx=20 cy=32`
+- Radius: `3`
+- Filled
+
+**Shaft** (filled rectangle)
+- Position: `x=34 y=29.5`
+- Size: `26×5`
+
+**Teeth** (two filled rounded rectangles)
+- First: `x=46 y=34.5`, size `5×6`, radius `1.5`
+- Second: `x=55 y=34.5`, size `5×6`, radius `1.5`
+
+All geometry uses `currentColor` so the mark adapts to context via CSS.
+
+## Lockups
+
+### Primary lockup
+Mark + wordmark, horizontal. Mark is 56px tall, wordmark is Geist 800 at 40px with -4% tracking. Gap between them is 14px (≈25% of mark height).
+
+### Icon-only mark
+The mark stands alone for favicons, dock icons, social avatars, and any context where the wordmark won't read. Tested at 64px, 40px, and 24px — center dot remains visible at 24px.
+
+### App icon tile
+The mark on a filled background, 12px corner radius:
+- **Ink tile:** `#0F1115` background, brass mark — primary social/avatar
+- **Brass tile:** `#F6B04E` background, ink mark — secondary, attention-grabbing
+
+## Typography
+
+- **Family:** Geist (Vercel)
+- **Weight:** 800
+- **Tracking:** -4% (-0.04em)
+- **Wordmark:** "DevKey" (capital D, capital K)
+
+Geist is loaded via Google Fonts (`https://fonts.googleapis.com/css2?family=Geist:wght@800`). `system-ui, sans-serif` is the fallback. The font CSS is added to `index.html` so the wordmark renders correctly even before the Vue app boots (e.g., during initial HTML render).
+
+## File deliverables
+
+The implementation phase will produce these files in `public/brand/`:
+
+| File | Purpose |
+|------|---------|
+| `devkey-logo-dark.svg` | Primary lockup, brass on dark — for dark UIs |
+| `devkey-logo-light.svg` | Primary lockup, brass on light — for light UIs |
+| `devkey-mark.svg` | Icon-only mark, `currentColor` — flexible |
+| `devkey-tile-ink.svg` | App-icon tile, brass on ink |
+| `devkey-tile-brass.svg` | App-icon tile, ink on brass |
+| `favicon.ico` | 16/32/48 multi-size favicon (mark only) |
+| `favicon.svg` | SVG favicon (mark, `currentColor`) |
+| `apple-touch-icon.png` | 180×180 PNG of ink tile |
+| `og-image.png` | 1200×630 OG card with primary lockup centered on ink |
+
+A `LogoMark.vue` component (in `src/components/brand/`) renders the mark inline as SVG using `currentColor`, for use inside the app shell where the wordmark is already nearby.
+
+## App integration
+
+- `index.html` `<title>` and favicon links point to the new files
+- `LandingPage.vue` hero uses the primary dark lockup
+- `LoginPage.vue` and `DashboardPage.vue` headers use the inline `LogoMark` component
+- `README.md` adds the primary lockup at the top
+- The scaffolded placeholder logos at `src/assets/logo.png` and `src/assets/logo.svg` are deleted in the same change (currently orphaned — no references in source)
+
+## Out of scope
+
+- Animated/motion variants
+- Print/embroidery files
+- Brand guidelines document beyond this spec
+- Sticker/merch assets
+- Wordmark-only variants (every lockup includes the mark)
+
+## Open questions
+
+None — all axes locked during brainstorm.
