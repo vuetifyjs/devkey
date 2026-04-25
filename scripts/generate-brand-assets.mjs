@@ -13,23 +13,27 @@ const targets = [
 
 async function main () {
   const browser = await chromium.launch()
-  const context = await browser.newContext({ deviceScaleFactor: 2 })
-  const page = await context.newPage()
+  try {
+    const context = await browser.newContext({ deviceScaleFactor: 2 })
+    const page = await context.newPage()
 
-  for (const target of targets) {
-    await page.setViewportSize({ width: target.width, height: target.height })
-    await page.goto(`file://${templatePath}`)
-    await page.evaluate(variant => {
-      document.body.setAttribute('data-variant', variant)
-    }, target.variant)
-    await page.evaluate(() => document.fonts.ready)
-    const element = await page.$(target.selector)
-    const out = resolve(outDir, target.file)
-    await element.screenshot({ path: out, omitBackground: false })
-    console.log(`wrote ${out}`)
+    for (const target of targets) {
+      await page.setViewportSize({ width: target.width, height: target.height })
+      await page.goto(`file://${templatePath}`)
+      await page.evaluate(variant => {
+        document.body.setAttribute('data-variant', variant)
+      }, target.variant)
+      await page.evaluate(async () => {
+        await document.fonts.load('800 144px "Geist"')
+        await document.fonts.ready
+      })
+      const out = resolve(outDir, target.file)
+      await page.locator(target.selector).screenshot({ path: out, omitBackground: false })
+      console.log(`wrote ${out}`)
+    }
+  } finally {
+    await browser.close()
   }
-
-  await browser.close()
 }
 
 main().catch(err => {
