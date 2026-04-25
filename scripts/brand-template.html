@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@800&display=swap">
+  <style>
+    html, body { margin: 0; padding: 0; background: transparent; }
+    body { font-family: 'Geist', system-ui, sans-serif; }
+
+    .stage { display: none; align-items: center; justify-content: center; }
+    body[data-variant="apple"] .stage.apple { display: flex; }
+    body[data-variant="og"] .stage.og { display: flex; }
+
+    .stage.apple {
+      width: 180px; height: 180px;
+      background: #0F1115;
+      border-radius: 36px;
+    }
+    .stage.apple svg { width: 112px; height: 112px; color: #F6B04E; }
+
+    .stage.og {
+      width: 1200px; height: 630px;
+      background: #0F1115;
+      gap: 36px;
+    }
+    .stage.og svg { width: 160px; height: 160px; color: #F6B04E; }
+    .stage.og .wm {
+      font-weight: 800;
+      font-size: 144px;
+      letter-spacing: -0.04em;
+      color: #F5F5F5;
+      line-height: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="stage apple">
+    <svg viewBox="0 0 64 64" fill="none">
+      <rect x="6" y="18" width="28" height="28" rx="8" stroke="currentColor" stroke-width="5" fill="none"/>
+      <circle cx="20" cy="32" r="3" fill="currentColor"/>
+      <rect x="34" y="29.5" width="26" height="5" fill="currentColor"/>
+      <rect x="46" y="34.5" width="5" height="6" rx="1.5" fill="currentColor"/>
+      <rect x="55" y="34.5" width="5" height="6" rx="1.5" fill="currentColor"/>
+    </svg>
+  </div>
+
+  <div class="stage og">
+    <svg viewBox="0 0 64 64" fill="none">
+      <rect x="6" y="18" width="28" height="28" rx="8" stroke="currentColor" stroke-width="5" fill="none"/>
+      <circle cx="20" cy="32" r="3" fill="currentColor"/>
+      <rect x="34" y="29.5" width="26" height="5" fill="currentColor"/>
+      <rect x="46" y="34.5" width="5" height="6" rx="1.5" fill="currentColor"/>
+      <rect x="55" y="34.5" width="5" height="6" rx="1.5" fill="currentColor"/>
+    </svg>
+    <span class="wm">DevKey</span>
+  </div>
+
+</body>
+</html>
