@@ -86,12 +86,13 @@ The implementation phase will produce these files in `public/brand/`:
 | `devkey-mark.svg` | Icon-only mark, `currentColor` — flexible |
 | `devkey-tile-ink.svg` | App-icon tile, brass on ink |
 | `devkey-tile-brass.svg` | App-icon tile, ink on brass |
-| `favicon.ico` | 16/32/48 multi-size favicon (mark only) |
-| `favicon.svg` | SVG favicon (mark, `currentColor`) |
+| `favicon.svg` | SVG favicon (mark with `prefers-color-scheme` media query for auto dark/light) |
 | `apple-touch-icon.png` | 180×180 PNG of ink tile |
 | `og-image.png` | 1200×630 OG card with primary lockup centered on ink |
 
-A `LogoMark.vue` component (in `src/components/brand/`) renders the mark inline as SVG using `currentColor`, for use inside the app shell where the wordmark is already nearby.
+The PNGs are generated from SVG sources by `scripts/generate-brand-assets.mjs` using `sharp` (added as a devDependency). Run via `pnpm gen:brand`. Modern browsers support SVG favicons; the `.ico` fallback is omitted.
+
+A `DkLogo.vue` component (in `src/components/`, alongside the other `Dk*` components) renders the mark inline as SVG using `currentColor`, for use inside the app shell where the wordmark is already nearby. The component takes a `size` prop (default 32).
 
 ## App integration
 
