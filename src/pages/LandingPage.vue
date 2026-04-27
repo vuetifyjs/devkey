@@ -144,7 +144,7 @@
     font-family: 'Geist', system-ui, sans-serif;
     font-weight: 800;
     font-size: 28px;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.04em;
   }
 
   .dk-landing__title {
