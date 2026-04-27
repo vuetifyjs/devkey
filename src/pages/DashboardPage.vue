@@ -11,13 +11,13 @@
     mdiMagnify,
     mdiPlus,
   } from '@mdi/js'
-  import DkCard from '../components/DkCard.vue'
-  import DkCollapsible from '../components/DkCollapsible.vue'
-  import DkCommandPalette from '../components/DkCommandPalette.vue'
   import DkLayout from '../components/DkLayout.vue'
-  import DkLogo from '../components/DkLogo.vue'
-  import DkTable from '../components/DkTable.vue'
+  import DkCollapsible from '../components/DkCollapsible.vue'
+  import DkCard from '../components/DkCard.vue'
   import DkTabs from '../components/DkTabs.vue'
+  import DkTable from '../components/DkTable.vue'
+  import DkCommandPalette from '../components/DkCommandPalette.vue'
+  import DkLogo from '../components/DkLogo.vue'
 
   defineOptions({ name: 'DkDashboardPage' })
 
@@ -66,7 +66,10 @@
   <DkLayout>
     <template #sidebar>
       <div class="dk-sidebar">
-        <h2 class="dk-sidebar__title">DevKey</h2>
+        <div class="dk-sidebar__brand">
+          <DkLogo :size="28" class="dk-sidebar__brand-mark" />
+          <span class="dk-sidebar__brand-text">DevKey</span>
+        </div>
         <nav class="dk-sidebar__nav">
           <DkCollapsible
             v-for="section in sidebarSections"
@@ -94,10 +97,6 @@
     </template>
 
     <div class="dk-dashboard">
-      <div class="dk-dashboard__brand">
-        <DkLogo :size="28" class="dk-dashboard__brand-mark" />
-        <span class="dk-dashboard__brand-text">DevKey</span>
-      </div>
       <header class="dk-dashboard__header">
         <h1 class="dk-dashboard__title">Dashboard</h1>
         <div class="dk-dashboard__actions">
@@ -159,12 +158,24 @@
 </template>
 
 <style scoped>
-  .dk-sidebar__title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--v0-theme-text);
+  .dk-sidebar__brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     padding: 0.5rem 1rem;
     margin-bottom: 0.5rem;
+  }
+
+  .dk-sidebar__brand-mark {
+    color: #F6B04E;
+  }
+
+  .dk-sidebar__brand-text {
+    font-family: 'Geist', system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    letter-spacing: -0.04em;
+    color: var(--v0-theme-text);
   }
 
   .dk-sidebar__nav {
@@ -198,24 +209,6 @@
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-  }
-
-  .dk-dashboard__brand {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 24px;
-  }
-
-  .dk-dashboard__brand-mark {
-    color: #F6B04E;
-  }
-
-  .dk-dashboard__brand-text {
-    font-family: 'Geist', system-ui, sans-serif;
-    font-weight: 800;
-    font-size: 18px;
-    letter-spacing: -0.04em;
   }
 
   .dk-dashboard__header {

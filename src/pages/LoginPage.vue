@@ -3,8 +3,8 @@
   import { shallowRef } from 'vue'
   import { useRouter } from 'vue-router'
   import DkButton from '../components/DkButton.vue'
-  import DkCard from '../components/DkCard.vue'
   import DkInput from '../components/DkInput.vue'
+  import DkCard from '../components/DkCard.vue'
   import DkLogo from '../components/DkLogo.vue'
 
   defineOptions({ name: 'DkLoginPage' })
