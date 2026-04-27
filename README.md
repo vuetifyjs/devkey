@@ -1,4 +1,12 @@
-# devkey
+<p align="center">
+  <img src="public/brand/devkey-mark.svg" width="80" alt="DevKey" />
+</p>
+
+<h1 align="center">DevKey</h1>
+
+<p align="center">A Vuetify0 example project — developer API dashboard.</p>
+
+---
 
 Scaffolded with Vuetify CLI.
 
