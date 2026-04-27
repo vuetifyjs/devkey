@@ -15,6 +15,7 @@
   } from '@mdi/js'
   import DkButton from '../components/DkButton.vue'
   import DkCard from '../components/DkCard.vue'
+  import DkLogo from '../components/DkLogo.vue'
   import DkToggle from '../components/DkToggle.vue'
 
   defineOptions({ name: 'DkLandingPage' })
@@ -42,6 +43,10 @@
 <template>
   <div class="dk-landing">
     <header class="dk-landing__hero">
+      <div class="dk-landing__brand">
+        <DkLogo :size="40" class="dk-landing__brand-mark" />
+        <span class="dk-landing__brand-wordmark">DevKey</span>
+      </div>
       <h1 class="dk-landing__title">API Keys,<br>Done Right</h1>
       <p class="dk-landing__subtitle">
         The developer platform for managing API keys, permissions, and usage analytics.
@@ -121,6 +126,25 @@
   .dk-landing__hero {
     text-align: center;
     padding: 6rem 2rem 4rem;
+  }
+
+  .dk-landing__brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .dk-landing__brand-mark {
+    color: #F6B04E;
+  }
+
+  .dk-landing__brand-wordmark {
+    font-family: 'Geist', system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 28px;
+    letter-spacing: -0.02em;
   }
 
   .dk-landing__title {

@@ -11,12 +11,13 @@
     mdiMagnify,
     mdiPlus,
   } from '@mdi/js'
-  import DkLayout from '../components/DkLayout.vue'
-  import DkCollapsible from '../components/DkCollapsible.vue'
   import DkCard from '../components/DkCard.vue'
-  import DkTabs from '../components/DkTabs.vue'
-  import DkTable from '../components/DkTable.vue'
+  import DkCollapsible from '../components/DkCollapsible.vue'
   import DkCommandPalette from '../components/DkCommandPalette.vue'
+  import DkLayout from '../components/DkLayout.vue'
+  import DkLogo from '../components/DkLogo.vue'
+  import DkTable from '../components/DkTable.vue'
+  import DkTabs from '../components/DkTabs.vue'
 
   defineOptions({ name: 'DkDashboardPage' })
 
@@ -93,6 +94,10 @@
     </template>
 
     <div class="dk-dashboard">
+      <div class="dk-dashboard__brand">
+        <DkLogo :size="28" class="dk-dashboard__brand-mark" />
+        <span class="dk-dashboard__brand-text">DevKey</span>
+      </div>
       <header class="dk-dashboard__header">
         <h1 class="dk-dashboard__title">Dashboard</h1>
         <div class="dk-dashboard__actions">
@@ -193,6 +198,24 @@
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+  }
+
+  .dk-dashboard__brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .dk-dashboard__brand-mark {
+    color: #F6B04E;
+  }
+
+  .dk-dashboard__brand-text {
+    font-family: 'Geist', system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    letter-spacing: -0.04em;
   }
 
   .dk-dashboard__header {

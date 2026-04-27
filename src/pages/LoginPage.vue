@@ -3,8 +3,9 @@
   import { shallowRef } from 'vue'
   import { useRouter } from 'vue-router'
   import DkButton from '../components/DkButton.vue'
-  import DkInput from '../components/DkInput.vue'
   import DkCard from '../components/DkCard.vue'
+  import DkInput from '../components/DkInput.vue'
+  import DkLogo from '../components/DkLogo.vue'
 
   defineOptions({ name: 'DkLoginPage' })
 
@@ -34,6 +35,7 @@
 <template>
   <div class="dk-login">
     <DkCard class="dk-login__card">
+      <DkLogo :size="40" class="dk-login__mark" />
       <h1 class="dk-login__title">Sign in to DevKey</h1>
       <p class="dk-login__subtitle">Enter your credentials to access the dashboard</p>
 
@@ -82,6 +84,11 @@
     width: 100%;
     height: auto;
     padding: 2rem;
+  }
+
+  .dk-login__mark {
+    color: #F6B04E;
+    margin-bottom: 16px;
   }
 
   .dk-login__title {
