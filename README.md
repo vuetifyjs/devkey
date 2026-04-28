@@ -1,12 +1,15 @@
-<p align="center">
-  <img src="public/brand/devkey-mark.svg" width="80" alt="DevKey" />
-</p>
-
-<h1 align="center">DevKey</h1>
+<div align="center">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://cdn.vuetifyjs.com/docs/images/one/logos/devkey-logo-dark.png">
+  <img alt="DevKey Logo" src="https://cdn.vuetifyjs.com/docs/images/one/logos/devkey-logo-light.png" height="150">
+</picture>
+</div>
 
 <p align="center">A Vuetify0 example project — developer API dashboard.</p>
 
 ---
+
+An **example project** demonstrating how to build a developer API dashboard with Vue 3 and [Vuetify0](https://0.vuetifyjs.com/). DevKey is **not a real product** — it exists to showcase Vuetify0 patterns, headless composables, and components in a realistic application.
 
 Scaffolded with Vuetify CLI.
 
