@@ -20,16 +20,23 @@
 
   const query = shallowRef('')
 
-  const { items: rows, pagination, search } = createDataTable({
-    items: () => items,
+  const table = createDataTable<ApiKey>({
     pagination: { itemsPerPage: 10 },
-    columns: [
-      { key: 'name', title: 'Name' },
-      { key: 'key', title: 'API Key' },
-      { key: 'created', title: 'Created' },
-      { key: 'lastUsed', title: 'Last Used' },
-    ],
   })
+
+  const { items: rows, pagination, search } = table
+
+  table.columns.onboard([
+    { id: 'name', title: 'Name', filterable: true },
+    { id: 'key', title: 'API Key', filterable: true },
+    { id: 'created', title: 'Created', filterable: true },
+    { id: 'lastUsed', title: 'Last Used', filterable: true },
+  ])
+
+  watch(() => items, value => {
+    table.clear()
+    table.onboard(value.map(item => ({ id: item.id, value: item })))
+  }, { immediate: true })
 
   watch(query, v => search(v))
 </script>
@@ -50,7 +57,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="row in (rows as unknown as ApiKey[])" :key="row.id">
+        <tr v-for="row in rows" :key="row.id">
           <td>{{ row.name }}</td>
           <td><code>{{ row.key }}</code></td>
           <td>{{ row.created }}</td>
