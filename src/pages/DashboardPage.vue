@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { shallowRef } from 'vue'
+  import { useNotifications } from '@vuetify/v0'
   import {
     mdiChartBar,
     mdiKey,
@@ -27,6 +28,8 @@
 
   const keys = useKeys()
 
+  const notifications = useNotifications()
+
   const stats = [
     { label: 'Total Requests', value: '1.2M', icon: mdiChartBar },
     { label: 'Active Keys', value: '24', icon: mdiKey },
@@ -49,9 +52,11 @@
   const paletteOpen = shallowRef(false)
 
   const commands = [
-    { id: 'new-key', label: 'Create New API Key', group: 'Actions', action: () => alert('Creating new API key...') },
-    { id: 'rotate', label: 'Rotate All Keys', group: 'Actions', action: () => alert('Rotating all API keys...') },
-    { id: 'revoke', label: 'Revoke a Key', group: 'Actions', action: () => alert('Select a key to revoke.') },
+    { id: 'new-key', label: 'Create New API Key', group: 'Actions', action: () => { createOpen.value = true } },
+    { id: 'rotate', label: 'Rotate All Keys', group: 'Actions', action: () => {
+      for (const k of keys.all.value) keys.rotate(k.id)
+      notifications.send({ subject: 'All keys rotated', severity: 'success' })
+    } },
     { id: 'analytics', label: 'View Analytics', group: 'Navigation', action: () => { tab.value = 'analytics' } },
     { id: 'keys', label: 'View API Keys', group: 'Navigation', action: () => { tab.value = 'keys' } },
     { id: 'settings', label: 'Open Settings', group: 'Navigation', action: () => { tab.value = 'settings' } },
