@@ -1,5 +1,6 @@
 import {
   createBreakpointsPlugin,
+  createNotificationsPlugin,
   createPermissionsPlugin,
   createRulesPlugin,
 } from '@vuetify/v0'
@@ -26,4 +27,6 @@ export default function devkey (app: App) {
   )
 
   app.use(createBreakpointsPlugin())
+
+  app.use(createNotificationsPlugin({ timeout: 4000 }))
 }
