@@ -3,17 +3,19 @@
 
   defineOptions({ name: 'DkCheckbox' })
 
-  const { value } = defineProps<{
+  const { value, indeterminate = false } = defineProps<{
     value?: string
+    indeterminate?: boolean
   }>()
 
   const model = defineModel<boolean>()
 </script>
 
 <template>
-  <Checkbox.Root v-model="model" :value="value" class="dk-checkbox">
-    <Checkbox.Indicator class="dk-checkbox__indicator">
-      <svg viewBox="0 0 24 24" width="14" height="14">
+  <Checkbox.Root v-model="model" :value="value" :indeterminate="indeterminate" class="dk-checkbox">
+    <Checkbox.Indicator v-slot="{ isMixed }" class="dk-checkbox__indicator">
+      <span v-if="isMixed">−</span>
+      <svg v-else viewBox="0 0 24 24" width="14" height="14">
         <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="currentColor" />
       </svg>
     </Checkbox.Indicator>

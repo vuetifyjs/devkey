@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { Checkbox, createDataTable } from '@vuetify/v0'
+  import { createDataTable } from '@vuetify/v0'
   import { computed, ref, shallowRef, toRef, watch } from 'vue'
   import DkAlertDialog from './DkAlertDialog.vue'
   import DkCheckbox from './DkCheckbox.vue'
@@ -93,19 +93,11 @@
       <thead>
         <tr>
           <th class="dk-table__check">
-            <Checkbox.Root
-              class="dk-checkbox"
+            <DkCheckbox
               :model-value="selection.isAllSelected.value"
               :indeterminate="selection.isMixed.value"
               @update:model-value="() => selection.toggleAll()"
-            >
-              <Checkbox.Indicator v-slot="{ isMixed }" class="dk-checkbox__indicator">
-                <span v-if="isMixed">−</span>
-                <svg v-else viewBox="0 0 24 24" width="14" height="14">
-                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="currentColor" />
-                </svg>
-              </Checkbox.Indicator>
-            </Checkbox.Root>
+            />
           </th>
           <th>Name</th>
           <th>API Key</th>

@@ -15,12 +15,16 @@
   }>()
 
   const model = defineModel<string>()
+
+  function label (value: unknown) {
+    return items.find(item => item.value === value)?.label ?? value
+  }
 </script>
 
 <template>
   <Select.Root v-model="model" class="dk-select">
     <Select.Activator class="dk-select__activator">
-      <Select.Value v-slot="{ selectedValue }">{{ selectedValue }}</Select.Value>
+      <Select.Value v-slot="{ selectedValue }">{{ label(selectedValue) }}</Select.Value>
       <Select.Placeholder class="dk-select__placeholder">{{ placeholder }}</Select.Placeholder>
       <Select.Cue v-slot="{ isOpen }">
         <span class="dk-select__cue">{{ isOpen ? '▲' : '▼' }}</span>
