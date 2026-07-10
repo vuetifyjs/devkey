@@ -49,6 +49,19 @@
     createOpen.value = true
   }
 
+  function onRotate (id: string) {
+    keys.rotate(id)
+    notifications.send({ subject: 'API key rotated', severity: 'success' })
+  }
+
+  function onRevoke (ids: string[]) {
+    keys.removeMany(ids)
+    notifications.send({
+      subject: ids.length > 1 ? `${ids.length} keys revoked` : 'API key revoked',
+      severity: 'info',
+    })
+  }
+
   const paletteOpen = shallowRef(false)
 
   const commands = [
@@ -139,14 +152,11 @@
         ]"
       >
         <template #keys>
-          <!--
-            Cast: useKeys.ApiKey has no string index signature, so it isn't
-            structurally assignable to DkTable's local ApiKey interface
-            (which declares `[key: string]: unknown`) even though every
-            field is unknown-compatible. DkTable's prop type is out of
-            scope here — Wave 2 extends it.
-          -->
-          <DkTable :items="(keys.all.value as any)" />
+          <DkTable
+            :items="keys.all.value"
+            @rotate="onRotate"
+            @revoke="onRevoke"
+          />
         </template>
         <template #analytics>
           <DkCard>
