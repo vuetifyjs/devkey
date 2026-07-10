@@ -140,7 +140,7 @@
 
     <div class="dk-table__footer">
       <span>{{ rows.length }} of {{ total }} shown</span>
-      <DkPagination v-model="page" :size="pagination.pages" />
+      <DkPagination v-model="page" :size="pagination.size" :items-per-page="pagination.itemsPerPage" />
     </div>
 
     <DkAlertDialog

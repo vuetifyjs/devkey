@@ -3,13 +3,13 @@
 
   defineOptions({ name: 'DkPagination' })
 
-  const { size } = defineProps<{ size: number }>()
+  const { size, itemsPerPage = 10 } = defineProps<{ size: number, itemsPerPage?: number }>()
 
   const page = defineModel<number>({ default: 1 })
 </script>
 
 <template>
-  <Pagination.Root v-model="page" :size="size" class="dk-pagination" v-slot="{ items }">
+  <Pagination.Root v-model="page" :size="size" :items-per-page="itemsPerPage" class="dk-pagination" v-slot="{ items }">
     <Pagination.Status class="dk-pagination__status" />
     <Pagination.Prev class="dk-pagination__btn">‹</Pagination.Prev>
     <template v-for="item in items" :key="`${item.type}-${item.value}`">
