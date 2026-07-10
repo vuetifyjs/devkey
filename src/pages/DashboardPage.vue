@@ -18,10 +18,14 @@
   import DkTable from '../components/DkTable.vue'
   import DkCommandPalette from '../components/DkCommandPalette.vue'
   import DkLogo from '../components/DkLogo.vue'
+  import DkCreateKeyDialog from '../components/DkCreateKeyDialog.vue'
+  import { useKeys } from '../composables/useKeys'
 
   defineOptions({ name: 'DkDashboardPage' })
 
   const tab = shallowRef('keys')
+
+  const keys = useKeys()
 
   const stats = [
     { label: 'Total Requests', value: '1.2M', icon: mdiChartBar },
@@ -30,22 +34,16 @@
     { label: 'Error Rate', value: '0.3%', icon: mdiAlertCircleOutline },
   ]
 
-  const apiKeys = [
-    { id: '1', name: 'Production', key: 'dk_live_abc123', created: '2026-01-15', lastUsed: '2026-04-05' },
-    { id: '2', name: 'Staging', key: 'dk_test_def456', created: '2026-02-20', lastUsed: '2026-04-04' },
-    { id: '3', name: 'CI/CD', key: 'dk_live_ghi789', created: '2026-03-01', lastUsed: '2026-04-05' },
-    { id: '4', name: 'Development', key: 'dk_test_jkl012', created: '2026-03-10', lastUsed: '2026-04-03' },
-    { id: '5', name: 'Mobile App', key: 'dk_live_mno345', created: '2026-03-15', lastUsed: '2026-04-05' },
-  ]
-
   const sidebarSections = [
     { label: 'Overview', icon: mdiViewDashboard, items: ['All Keys', 'Create New', 'Rotate'] },
     { label: 'Management', icon: mdiCog, items: ['Overview', 'Usage', 'Errors'] },
     { label: 'Account', icon: mdiAccount, items: ['Team', 'Billing', 'Security'] },
   ]
 
+  const createOpen = shallowRef(false)
+
   function onNewKey () {
-    alert('Creating new API key...')
+    createOpen.value = true
   }
 
   const paletteOpen = shallowRef(false)
@@ -136,7 +134,14 @@
         ]"
       >
         <template #keys>
-          <DkTable :items="apiKeys" />
+          <!--
+            Cast: useKeys.ApiKey has no string index signature, so it isn't
+            structurally assignable to DkTable's local ApiKey interface
+            (which declares `[key: string]: unknown`) even though every
+            field is unknown-compatible. DkTable's prop type is out of
+            scope here — Wave 2 extends it.
+          -->
+          <DkTable :items="(keys.all.value as any)" />
         </template>
         <template #analytics>
           <DkCard>
@@ -153,6 +158,7 @@
       </DkTabs>
 
       <DkCommandPalette v-model="paletteOpen" :commands="commands" />
+      <DkCreateKeyDialog v-model="createOpen" />
     </div>
   </DkLayout>
 </template>
