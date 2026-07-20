@@ -10,8 +10,14 @@
 
   defineOptions({ name: 'DkTable' })
 
-  const { items } = defineProps<{
+  const {
+    items,
+    canRotate = true,
+    canRevoke = true,
+  } = defineProps<{
     items: ApiKey[]
+    canRotate?: boolean
+    canRevoke?: boolean
   }>()
 
   const emit = defineEmits<{
@@ -80,7 +86,7 @@
     <div class="dk-table__toolbar">
       <DkInput v-model="query" placeholder="Search keys..." />
       <button
-        v-if="selectedCount"
+        v-if="canRevoke && selectedCount"
         class="dk-table__bulk"
         type="button"
         @click="askRevoke([...selection.selectedIds] as string[])"
@@ -92,7 +98,7 @@
     <table class="dk-table__grid">
       <thead>
         <tr>
-          <th class="dk-table__check">
+          <th v-if="canRevoke" class="dk-table__check">
             <DkCheckbox
               :model-value="selection.isAllSelected.value"
               :indeterminate="selection.isMixed.value"
@@ -103,12 +109,12 @@
           <th>API Key</th>
           <th>Created</th>
           <th>Last Used</th>
-          <th class="dk-table__actions-col">Actions</th>
+          <th v-if="canRotate || canRevoke" class="dk-table__actions-col">Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="row in rows" :key="row.id">
-          <td class="dk-table__check">
+          <td v-if="canRevoke" class="dk-table__check">
             <DkCheckbox
               :model-value="selection.isSelected(row.id)"
               @update:model-value="() => selection.toggle(row.id)"
@@ -122,9 +128,16 @@
           </td>
           <td>{{ row.created }}</td>
           <td>{{ row.lastUsed }}</td>
-          <td class="dk-table__actions">
-            <button type="button" @click="emit('rotate', row.id)">Rotate</button>
-            <button type="button" class="dk-table__danger" @click="askRevoke([row.id])">Revoke</button>
+          <td v-if="canRotate || canRevoke" class="dk-table__actions">
+            <button v-if="canRotate" type="button" @click="emit('rotate', row.id)">Rotate</button>
+            <button
+              v-if="canRevoke"
+              type="button"
+              class="dk-table__danger"
+              @click="askRevoke([row.id])"
+            >
+              Revoke
+            </button>
           </td>
         </tr>
       </tbody>
