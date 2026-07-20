@@ -20,6 +20,7 @@
   import DkCommandPalette from '../components/DkCommandPalette.vue'
   import DkLogo from '../components/DkLogo.vue'
   import DkCreateKeyDialog from '../components/DkCreateKeyDialog.vue'
+  import DkProgress from '../components/DkProgress.vue'
   import { useKeys } from '../composables/useKeys'
 
   defineOptions({ name: 'DkDashboardPage' })
@@ -35,6 +36,39 @@
     { label: 'Active Keys', value: '24', icon: mdiKey },
     { label: 'Avg Latency', value: '45ms', icon: mdiClockOutline },
     { label: 'Error Rate', value: '0.3%', icon: mdiAlertCircleOutline },
+  ]
+
+  // Demo analytics quotas — product-shaped Progress surfaces, not live metrics.
+  const analytics = [
+    {
+      id: 'requests',
+      label: 'Monthly request quota',
+      value: 240_000,
+      max: 1_000_000,
+      format: (total: number, max: number) =>
+        `${(total / 1000).toFixed(0)}k / ${(max / 1000).toFixed(0)}k`,
+    },
+    {
+      id: 'keys',
+      label: 'Active keys vs plan limit',
+      value: 24,
+      max: 50,
+      format: (total: number, max: number) => `${total} / ${max}`,
+    },
+    {
+      id: 'errors',
+      label: 'Error budget remaining',
+      value: 97,
+      max: 100,
+      format: (total: number) => `${total}% remaining`,
+    },
+    {
+      id: 'rate',
+      label: 'Rate-limit headroom',
+      value: 720,
+      max: 1000,
+      format: (total: number, max: number) => `${total} / ${max} rpm`,
+    },
   ]
 
   const sidebarSections = [
@@ -159,10 +193,23 @@
           />
         </template>
         <template #analytics>
-          <DkCard>
-            <h3 class="dk-dashboard__tab-title">Analytics</h3>
-            <p class="dk-dashboard__tab-desc">Usage analytics and charts coming soon.</p>
-          </DkCard>
+          <div class="dk-dashboard__analytics">
+            <DkCard
+              v-for="metric in analytics"
+              :key="metric.id"
+              class="dk-dashboard__metric"
+            >
+              <DkProgress
+                :model-value="metric.value"
+                :max="metric.max"
+                :label="metric.label"
+              >
+                <template #value="{ total, max }">
+                  {{ metric.format(total, max) }}
+                </template>
+              </DkProgress>
+            </DkCard>
+          </div>
         </template>
         <template #settings>
           <DkCard>
@@ -314,5 +361,23 @@
 
   .dk-dashboard__tab-desc {
     color: var(--v0-theme-muted);
+  }
+
+  .dk-dashboard__analytics {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .dk-dashboard__metric {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  @media (max-width: 720px) {
+    .dk-dashboard__analytics {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
