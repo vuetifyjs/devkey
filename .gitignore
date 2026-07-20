@@ -3,3 +3,6 @@ dist/
 .vscode/
 *.local
 .superpowers/
+
+# Agent/session planning artifacts (not product docs)
+docs/superpowers/
