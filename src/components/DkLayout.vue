@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { useBreakpoints } from '@vuetify/v0'
   import { toRef } from 'vue'
+  import DkSnackbar from './DkSnackbar.vue'
 
   defineOptions({ name: 'DkLayout' })
 
@@ -17,6 +18,8 @@
     <main class="dk-layout__main">
       <slot />
     </main>
+
+    <DkSnackbar />
   </div>
 </template>
 

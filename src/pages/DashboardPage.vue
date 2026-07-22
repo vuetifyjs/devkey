@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { shallowRef } from 'vue'
+  import { useNotifications } from '@vuetify/v0'
   import {
     mdiChartBar,
     mdiKey,
@@ -18,10 +19,16 @@
   import DkTable from '../components/DkTable.vue'
   import DkCommandPalette from '../components/DkCommandPalette.vue'
   import DkLogo from '../components/DkLogo.vue'
+  import DkCreateKeyDialog from '../components/DkCreateKeyDialog.vue'
+  import { useKeys } from '../composables/useKeys'
 
   defineOptions({ name: 'DkDashboardPage' })
 
   const tab = shallowRef('keys')
+
+  const keys = useKeys()
+
+  const notifications = useNotifications()
 
   const stats = [
     { label: 'Total Requests', value: '1.2M', icon: mdiChartBar },
@@ -30,30 +37,39 @@
     { label: 'Error Rate', value: '0.3%', icon: mdiAlertCircleOutline },
   ]
 
-  const apiKeys = [
-    { id: '1', name: 'Production', key: 'dk_live_abc123', created: '2026-01-15', lastUsed: '2026-04-05' },
-    { id: '2', name: 'Staging', key: 'dk_test_def456', created: '2026-02-20', lastUsed: '2026-04-04' },
-    { id: '3', name: 'CI/CD', key: 'dk_live_ghi789', created: '2026-03-01', lastUsed: '2026-04-05' },
-    { id: '4', name: 'Development', key: 'dk_test_jkl012', created: '2026-03-10', lastUsed: '2026-04-03' },
-    { id: '5', name: 'Mobile App', key: 'dk_live_mno345', created: '2026-03-15', lastUsed: '2026-04-05' },
-  ]
-
   const sidebarSections = [
     { label: 'Overview', icon: mdiViewDashboard, items: ['All Keys', 'Create New', 'Rotate'] },
     { label: 'Management', icon: mdiCog, items: ['Overview', 'Usage', 'Errors'] },
     { label: 'Account', icon: mdiAccount, items: ['Team', 'Billing', 'Security'] },
   ]
 
+  const createOpen = shallowRef(false)
+
   function onNewKey () {
-    alert('Creating new API key...')
+    createOpen.value = true
+  }
+
+  function onRotate (id: string) {
+    keys.rotate(id)
+    notifications.send({ subject: 'API key rotated', severity: 'success' })
+  }
+
+  function onRevoke (ids: string[]) {
+    keys.removeMany(ids)
+    notifications.send({
+      subject: ids.length > 1 ? `${ids.length} keys revoked` : 'API key revoked',
+      severity: 'info',
+    })
   }
 
   const paletteOpen = shallowRef(false)
 
   const commands = [
-    { id: 'new-key', label: 'Create New API Key', group: 'Actions', action: () => alert('Creating new API key...') },
-    { id: 'rotate', label: 'Rotate All Keys', group: 'Actions', action: () => alert('Rotating all API keys...') },
-    { id: 'revoke', label: 'Revoke a Key', group: 'Actions', action: () => alert('Select a key to revoke.') },
+    { id: 'new-key', label: 'Create New API Key', group: 'Actions', action: () => { createOpen.value = true } },
+    { id: 'rotate', label: 'Rotate All Keys', group: 'Actions', action: () => {
+      for (const k of keys.all.value) keys.rotate(k.id)
+      notifications.send({ subject: 'All keys rotated', severity: 'success' })
+    } },
     { id: 'analytics', label: 'View Analytics', group: 'Navigation', action: () => { tab.value = 'analytics' } },
     { id: 'keys', label: 'View API Keys', group: 'Navigation', action: () => { tab.value = 'keys' } },
     { id: 'settings', label: 'Open Settings', group: 'Navigation', action: () => { tab.value = 'settings' } },
@@ -136,7 +152,11 @@
         ]"
       >
         <template #keys>
-          <DkTable :items="apiKeys" />
+          <DkTable
+            :items="keys.all.value"
+            @rotate="onRotate"
+            @revoke="onRevoke"
+          />
         </template>
         <template #analytics>
           <DkCard>
@@ -153,6 +173,7 @@
       </DkTabs>
 
       <DkCommandPalette v-model="paletteOpen" :commands="commands" />
+      <DkCreateKeyDialog v-model="createOpen" />
     </div>
   </DkLayout>
 </template>
