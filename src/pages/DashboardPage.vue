@@ -90,7 +90,6 @@
           <DkCollapsible
             v-for="section in sidebarSections"
             :key="section.label"
-            open
           >
             <template #activator>
               <svg class="dk-icon" viewBox="0 0 24 24" width="16" height="16">

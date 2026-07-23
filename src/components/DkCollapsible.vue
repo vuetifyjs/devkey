@@ -1,34 +1,36 @@
 <script setup lang="ts">
+  import { Collapsible } from '@vuetify/v0'
+
   defineOptions({ name: 'DkCollapsible' })
 
-  const { open = false } = defineProps<{
-    open?: boolean
-  }>()
+  // Unbound v-model keeps local open state; default true matches sidebar sections.
+  const open = defineModel<boolean>('open', { default: true })
 </script>
 
 <template>
-  <details class="dk-collapsible" :open="open">
-    <summary class="dk-collapsible__trigger">
+  <Collapsible.Root v-model="open" class="dk-collapsible">
+    <Collapsible.Activator class="dk-collapsible__trigger">
       <slot name="activator" />
-      <svg
-        class="dk-collapsible__icon"
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <polyline points="6 9 12 15 18 9" />
-      </svg>
-    </summary>
+      <Collapsible.Cue class="dk-collapsible__icon" as="span">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </Collapsible.Cue>
+    </Collapsible.Activator>
 
-    <div class="dk-collapsible__content">
+    <Collapsible.Content class="dk-collapsible__content">
       <slot />
-    </div>
-  </details>
+    </Collapsible.Content>
+  </Collapsible.Root>
 </template>
 
 <style scoped>
@@ -40,31 +42,33 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    width: 100%;
     padding: 0.75rem 1rem;
     cursor: pointer;
     font-weight: 500;
+    font: inherit;
     color: var(--v0-theme-text);
-    list-style: none;
+    background: transparent;
+    border: none;
+    text-align: left;
   }
 
   .dk-collapsible__icon {
     margin-left: auto;
-  }
-
-  .dk-collapsible__trigger::-webkit-details-marker {
-    display: none;
-  }
-
-  .dk-collapsible__icon {
-    transition: transform 0.2s ease;
+    display: inline-flex;
     color: var(--v0-theme-muted);
+    transition: transform 0.2s ease;
   }
 
-  .dk-collapsible[open] .dk-collapsible__icon {
+  .dk-collapsible__icon[data-state='open'] {
     transform: rotate(180deg);
   }
 
   .dk-collapsible__content {
     padding: 0 1rem 0.75rem;
+  }
+
+  .dk-collapsible__content[hidden] {
+    display: none;
   }
 </style>
