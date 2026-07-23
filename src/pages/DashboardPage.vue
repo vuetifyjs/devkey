@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import { shallowRef } from 'vue'
-  import { useNotifications } from '@vuetify/v0'
+  import { computed, shallowRef } from 'vue'
+  import { useNotifications, usePermissions } from '@vuetify/v0'
   import {
     mdiChartBar,
     mdiKey,
@@ -20,15 +20,22 @@
   import DkCommandPalette from '../components/DkCommandPalette.vue'
   import DkLogo from '../components/DkLogo.vue'
   import DkCreateKeyDialog from '../components/DkCreateKeyDialog.vue'
+  import DkSelect from '../components/DkSelect.vue'
   import { useKeys } from '../composables/useKeys'
+  import { ROLES, useRole } from '../composables/useRole'
 
   defineOptions({ name: 'DkDashboardPage' })
 
   const tab = shallowRef('keys')
 
   const keys = useKeys()
-
+  const { role } = useRole()
+  const permissions = usePermissions()
   const notifications = useNotifications()
+
+  const canCreate = computed(() => permissions.can(role.value, 'create', 'keys'))
+  const canRotate = computed(() => permissions.can(role.value, 'rotate', 'keys'))
+  const canRevoke = computed(() => permissions.can(role.value, 'revoke', 'keys'))
 
   const stats = [
     { label: 'Total Requests', value: '1.2M', icon: mdiChartBar },
@@ -46,15 +53,18 @@
   const createOpen = shallowRef(false)
 
   function onNewKey () {
+    if (!canCreate.value) return
     createOpen.value = true
   }
 
   function onRotate (id: string) {
+    if (!canRotate.value) return
     keys.rotate(id)
     notifications.send({ subject: 'API key rotated', severity: 'success' })
   }
 
   function onRevoke (ids: string[]) {
+    if (!canRevoke.value) return
     keys.removeMany(ids)
     notifications.send({
       subject: ids.length > 1 ? `${ids.length} keys revoked` : 'API key revoked',
@@ -64,18 +74,38 @@
 
   const paletteOpen = shallowRef(false)
 
-  const commands = [
-    { id: 'new-key', label: 'Create New API Key', group: 'Actions', action: () => { createOpen.value = true } },
-    { id: 'rotate', label: 'Rotate All Keys', group: 'Actions', action: () => {
-      for (const k of keys.all.value) keys.rotate(k.id)
-      notifications.send({ subject: 'All keys rotated', severity: 'success' })
-    } },
-    { id: 'analytics', label: 'View Analytics', group: 'Navigation', action: () => { tab.value = 'analytics' } },
-    { id: 'keys', label: 'View API Keys', group: 'Navigation', action: () => { tab.value = 'keys' } },
-    { id: 'settings', label: 'Open Settings', group: 'Navigation', action: () => { tab.value = 'settings' } },
-    { id: 'docs', label: 'Open Documentation', group: 'Links', action: () => window.open('https://0.vuetifyjs.com', '_blank') },
-    { id: 'github', label: 'View on GitHub', group: 'Links', action: () => window.open('https://github.com/vuetifyjs/0', '_blank') },
-  ]
+  const commands = computed(() => {
+    const list = [
+      { id: 'analytics', label: 'View Analytics', group: 'Navigation', action: () => { tab.value = 'analytics' } },
+      { id: 'keys', label: 'View API Keys', group: 'Navigation', action: () => { tab.value = 'keys' } },
+      { id: 'settings', label: 'Open Settings', group: 'Navigation', action: () => { tab.value = 'settings' } },
+      { id: 'docs', label: 'Open Documentation', group: 'Links', action: () => window.open('https://0.vuetifyjs.com', '_blank') },
+      { id: 'github', label: 'View on GitHub', group: 'Links', action: () => window.open('https://github.com/vuetifyjs/0', '_blank') },
+    ]
+
+    if (canCreate.value) {
+      list.unshift({
+        id: 'new-key',
+        label: 'Create New API Key',
+        group: 'Actions',
+        action: () => { createOpen.value = true },
+      })
+    }
+
+    if (canRotate.value) {
+      list.splice(canCreate.value ? 1 : 0, 0, {
+        id: 'rotate',
+        label: 'Rotate All Keys',
+        group: 'Actions',
+        action: () => {
+          for (const k of keys.all.value) keys.rotate(k.id)
+          notifications.send({ subject: 'All keys rotated', severity: 'success' })
+        },
+      })
+    }
+
+    return list
+  })
 </script>
 
 <template>
@@ -116,7 +146,12 @@
       <header class="dk-dashboard__header">
         <h1 class="dk-dashboard__title">Dashboard</h1>
         <div class="dk-dashboard__actions">
-          <button class="dk-dashboard__new-key" type="button" @click="onNewKey">
+          <button
+            v-if="canCreate"
+            class="dk-dashboard__new-key"
+            type="button"
+            @click="onNewKey"
+          >
             <svg class="dk-icon" viewBox="0 0 24 24" width="16" height="16">
               <path :d="mdiPlus" fill="currentColor" />
             </svg>
@@ -154,6 +189,8 @@
         <template #keys>
           <DkTable
             :items="keys.all.value"
+            :can-rotate="canRotate"
+            :can-revoke="canRevoke"
             @rotate="onRotate"
             @revoke="onRevoke"
           />
@@ -165,15 +202,29 @@
           </DkCard>
         </template>
         <template #settings>
-          <DkCard>
+          <DkCard class="dk-dashboard__settings">
             <h3 class="dk-dashboard__tab-title">Settings</h3>
-            <p class="dk-dashboard__tab-desc">Team and billing settings coming soon.</p>
+            <p class="dk-dashboard__tab-desc">
+              Switch the demo role to exercise
+              <code>usePermissions</code>. Changes persist via
+              <code>useStorage</code>.
+            </p>
+
+            <div class="dk-dashboard__setting">
+              <span class="dk-dashboard__setting-label">Role</span>
+              <DkSelect v-model="role" :items="ROLES" />
+              <ul class="dk-dashboard__perm-list">
+                <li :data-allowed="canCreate || undefined">create keys</li>
+                <li :data-allowed="canRotate || undefined">rotate keys</li>
+                <li :data-allowed="canRevoke || undefined">revoke keys</li>
+              </ul>
+            </div>
           </DkCard>
         </template>
       </DkTabs>
 
       <DkCommandPalette v-model="paletteOpen" :commands="commands" />
-      <DkCreateKeyDialog v-model="createOpen" />
+      <DkCreateKeyDialog v-if="canCreate" v-model="createOpen" />
     </div>
   </DkLayout>
 </template>
@@ -314,5 +365,50 @@
 
   .dk-dashboard__tab-desc {
     color: var(--v0-theme-muted);
+  }
+
+  .dk-dashboard__tab-desc code {
+    font-size: 0.875em;
+    color: var(--v0-theme-primary);
+  }
+
+  .dk-dashboard__settings {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .dk-dashboard__setting {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 20rem;
+  }
+
+  .dk-dashboard__setting-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--v0-theme-text);
+  }
+
+  .dk-dashboard__perm-list {
+    list-style: none;
+    padding: 0;
+    margin: 0.25rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.8125rem;
+    color: var(--v0-theme-muted);
+  }
+
+  .dk-dashboard__perm-list li::before {
+    content: '✗ ';
+    color: var(--v0-theme-error);
+  }
+
+  .dk-dashboard__perm-list li[data-allowed]::before {
+    content: '✓ ';
+    color: var(--v0-theme-success);
   }
 </style>

@@ -7,12 +7,20 @@ import {
 import type { App } from 'vue'
 
 export default function devkey (app: App) {
+  // Exact action/subject pairs — the default adapter looks up
+  // `${role}.${action}.${subject}` literally (no wildcard expansion).
   app.use(
     createPermissionsPlugin({
       permissions: {
-        admin: [['manage', '*']],
-        developer: [['read', 'keys'], ['create', 'keys']],
-        viewer: [['read', 'keys']],
+        admin: [
+          [['read', 'create', 'rotate', 'revoke'], 'keys'],
+        ],
+        developer: [
+          [['read', 'create', 'rotate'], 'keys'],
+        ],
+        viewer: [
+          ['read', 'keys'],
+        ],
       },
     })
   )
